@@ -12,8 +12,6 @@ namespace ariel
     public:
         Graph();
 
-        Graph(const std::vector<std::vector<int>> &matrix);
-
         void loadGraph(const std::vector<std::vector<int>> &matrix);
 
         void printGraph() const;

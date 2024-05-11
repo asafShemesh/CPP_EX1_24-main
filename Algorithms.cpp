@@ -1,13 +1,14 @@
 // 325362457   asaf0604@gmail.com
 #include "Algorithms.hpp"
+using namespace std;
 namespace ariel
 {
 
-    int Algorithms::isConnected(Graph &g)
+    int Algorithms::isConnected(Graph &g)//change?
     {
         const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-        std::vector<bool> visited(adjacencyMatrix.size(), false);
-        std::queue<size_t> q;
+        vector<bool> visited(adjacencyMatrix.size(), false);
+        queue<size_t> q;
         q.push(0);
         visited[0] = true;
 
@@ -34,10 +35,10 @@ namespace ariel
         return 1;
     }
 
-    int Algorithms::shortestPath(Graph &g, size_t start, size_t end)
+    int Algorithms::shortestPath(Graph &g, size_t start, size_t end)//change
     {
-        std::vector<int> distances(g.getAdjacencyMatrix().size(), -1);
-        std::queue<size_t> q;
+        vector<int> distances(g.getAdjacencyMatrix().size(), -1);
+        queue<size_t> q;
         q.push(start);
         distances[start] = 0;
 
@@ -88,8 +89,8 @@ namespace ariel
     int Algorithms::isContainsCycle(Graph &g)
     {
         const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-        std::vector<bool> visited(adjacencyMatrix.size(), false);
-        std::vector<bool> recStack(adjacencyMatrix.size(), false);
+        vector<bool> visited(adjacencyMatrix.size(), false);
+        vector<bool> recStack(adjacencyMatrix.size(), false);
 
         for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
         {
@@ -102,10 +103,10 @@ namespace ariel
         return 0;
     }
 
-    bool Algorithms::isBipartiteUtil(Graph &g, size_t v, std::vector<int> &color)
+    bool Algorithms::isBipartiteUtil(Graph &g, size_t v, std::vector<int> &color)//change
     {
         const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-        std::queue<size_t> q;
+        queue<size_t> q;
         q.push(v);
         color[v] = 1;
 
@@ -130,10 +131,10 @@ namespace ariel
         return true;
     }
 
-    int Algorithms::isBipartite(Graph &g)
+    int Algorithms::isBipartite(Graph &g)//change
     {
         const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-        std::vector<int> color(adjacencyMatrix.size(), -1);
+        vector<int> color(adjacencyMatrix.size(), -1);
 
         for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
         {
@@ -152,7 +153,7 @@ namespace ariel
     void Algorithms::negativeCycle(Graph &g)
     {
         const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-        std::vector<int> distance(adjacencyMatrix.size(), 0);
+        vector<int> distance(adjacencyMatrix.size(), 0);
 
         // Perform Bellman-Ford algorithm to detect negative cycles
         size_t size = adjacencyMatrix.size();
@@ -174,7 +175,7 @@ namespace ariel
             }
         }
 
-        std::cout << "No negative cycle detected." << std::endl;
+        cout << "No negative cycle detected." << std::endl;
     }
 
 }

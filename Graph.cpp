@@ -6,10 +6,6 @@ namespace ariel
 {
     Graph::Graph() {}
 
-    Graph::Graph(const std::vector<std::vector<int>> &matrix)
-    {
-        loadGraph(matrix);
-    }
 
     void Graph::loadGraph(const std::vector<std::vector<int>> &matrix)
     {
