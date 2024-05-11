@@ -1,4 +1,4 @@
-// 325362457   asaf0604@gmail.com
+# 325362457   asaf0604@gmail.com
 
 CXX=clang++
 CXXFLAGS=-std=c++11 -Werror -Wsign-conversion

@@ -17,7 +17,7 @@ int main()
         {0, 1, 0}};
     g.loadGraph(graph); // Load the graph to the object.
 
-    g.printGraph();                                    // Should print: "Graph with 3 vertices and 4 edges."
+    g.printGraph(); // Should print: "Graph with 3 vertices and 4 edges."
     Algorithms algorithms;
     cout << algorithms.isConnected(g) << endl;        // Should print: "1" (true).
     cout << algorithms.shortestPath(g, 0, 2) << endl; // Should print: 0->1->2.
@@ -34,7 +34,7 @@ int main()
 
     g.loadGraph(graph2); // Load the graph to the object.
 
-    g.printGraph();                                    // Should print: "Graph with 5 vertices and 8 edges."
+    g.printGraph();                                   // Should print: "Graph with 5 vertices and 8 edges."
     cout << algorithms.isConnected(g) << endl;        // Should print: "0" (false).
     cout << algorithms.shortestPath(g, 0, 4) << endl; // Should print: "-1" (there is no path between 0 and 4).
     cout << algorithms.isContainsCycle(g) << endl;    // Should print: "The cycle is: 0->1->2->0".
@@ -49,7 +49,7 @@ int main()
         {0, 0, 0, 5, 0}};
     g.loadGraph(graph3); // Load the graph to the object.
 
-    g.printGraph();                                    // Should print: "Graph with 5 vertices and 8 edges."
+    g.printGraph();                                   // Should print: "Graph with 5 vertices and 8 edges."
     cout << algorithms.isConnected(g) << endl;        // Should print: "1" (true).
     cout << algorithms.shortestPath(g, 0, 4) << endl; // Should print: 0->2->3->4.
     cout << algorithms.isContainsCycle(g) << endl;    // Should print: "0" (false).

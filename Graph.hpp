@@ -5,22 +5,24 @@
 #include <vector>
 #include <stdexcept>
 
-namespace ariel {
-    class Graph {
+namespace ariel
+{
+    class Graph
+    {
     public:
         Graph();
 
-        Graph(const std::vector<std::vector<int>>& matrix);
+        Graph(const std::vector<std::vector<int>> &matrix);
 
-        void loadGraph(const std::vector<std::vector<int>>& matrix);
+        void loadGraph(const std::vector<std::vector<int>> &matrix);
 
         void printGraph() const;
 
-        const std::vector<std::vector<int>>& getAdjacencyMatrix() const;
+        const std::vector<std::vector<int>> &getAdjacencyMatrix() const;
 
     private:
         std::vector<std::vector<int>> adjacencyMatrix;
     };
 }
 
-#endif 
+#endif
