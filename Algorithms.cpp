@@ -114,47 +114,68 @@ namespace ariel
         return shortestPath;
     }
 
-    bool isCyclicDFS(Graph &g, size_t v, std::vector<bool> &visited, int parent)
-    {
-        visited[v] = true;
+bool isCyclicDFS(Graph &g, size_t v, std::vector<bool> &visited, std::vector<int> &parent, std::vector<size_t> &cyclePath)
+{
+    visited[v] = true;
 
-        const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-        for (size_t i = 0; i < adjacencyMatrix[v].size(); ++i)
+    const auto &adjacencyMatrix = g.getAdjacencyMatrix();
+    for (size_t i = 0; i < adjacencyMatrix[v].size(); ++i)
+    {
+        if (adjacencyMatrix[v][i])
         {
-            if (adjacencyMatrix[v][i])
+            if (!visited[i])
             {
-                if (!visited[i])
+                parent[i] = v; // Set the parent of vertex i to v
+                if (isCyclicDFS(g, i, visited, parent, cyclePath))
                 {
-                    if (isCyclicDFS(g, i, visited, v))
-                    {
-                        return true;
-                    }
-                }
-                else if (i != parent)
-                {
+                    cyclePath.push_back(v); // Add the current vertex to the cycle path
                     return true;
                 }
             }
-        }
-        return false;
-    }
-
-    int Algorithms::isContainsCycle(Graph &g)
-    {
-        const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-        std::vector<bool> visited(adjacencyMatrix.size(), false);
-
-        // Perform DFS traversal from each vertex
-        for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
-        {
-            if (!visited[i] && isCyclicDFS(g, i, visited, -1))
+            else if (i != static_cast<size_t>(parent[v]) && parent[v] != -1)
             {
-                return 1; // Cycle detected
+                // Found a cycle, construct the cycle path
+                size_t p = v;
+                while (p != i)
+                {
+                    cyclePath.push_back(p);
+                    p = static_cast<size_t>(parent[p]);
+                }
+                cyclePath.push_back(i);
+                cyclePath.push_back(v); // Add the current vertex to the cycle path
+                return true;
             }
         }
-
-        return 0; // No cycle found
     }
+    return false;
+}
+
+int Algorithms::isContainsCycle(Graph &g)
+{
+    const auto &adjacencyMatrix = g.getAdjacencyMatrix();
+    std::vector<bool> visited(adjacencyMatrix.size(), false);
+    std::vector<int> parent(adjacencyMatrix.size(), -1); // Store the parent information for each vertex
+    std::vector<size_t> cyclePath;
+
+    // Perform DFS traversal from each vertex
+    for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
+    {
+        cyclePath.clear(); // Clear the cycle path before each DFS traversal
+        if (!visited[i] && isCyclicDFS(g, i, visited, parent, cyclePath))
+        {
+            // Print the cycle path
+            std::cout << "The cycle is: ";
+            for (size_t j = cyclePath.size() - 1; j > 0; --j)
+            {
+                std::cout << cyclePath[j] << "->";
+            }
+            std::cout << cyclePath[0] << std::endl;
+            return 1; // Cycle detected
+        }
+    }
+
+    return 0; // No cycle found
+}
 
     std::string Algorithms::isBipartite(Graph g)
     {
