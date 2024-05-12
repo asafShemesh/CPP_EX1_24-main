@@ -1,11 +1,11 @@
-// 325362457   asaf0604@gmail.com
+// Graph.cpp
+
 #include "Graph.hpp"
 #include <iostream>
 
 namespace ariel
 {
     Graph::Graph() {}
-
 
     void Graph::loadGraph(const std::vector<std::vector<int>> &matrix)
     {
@@ -23,19 +23,8 @@ namespace ariel
 
     void Graph::printGraph() const
     {
-        std::cout << "Graph with " << adjacencyMatrix.size() << " vertices and " << std::endl;
-        int edges = 0;
-        for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
-        {
-            for (size_t j = i + 1; j < adjacencyMatrix[i].size(); ++j)
-            {
-                if (adjacencyMatrix[i][j] != 0)
-                {
-                    std::cout << i << " - " << j << ": " << adjacencyMatrix[i][j] << std::endl;
-                    edges++;
-                }
-            }
-        }
+        std::cout << "Graph with " << adjacencyMatrix.size() << " vertices and ";
+        int edges = getNumEdges();
         std::cout << edges << " edges." << std::endl;
     }
 
@@ -43,4 +32,36 @@ namespace ariel
     {
         return adjacencyMatrix;
     }
+    
+    size_t Graph::getNumVertices() const
+    {
+        return adjacencyMatrix.size();
+    }
+
+    size_t Graph::getNumEdges() const
+    {
+        size_t edges = 0;
+        for (const auto &row : adjacencyMatrix)
+        {
+            for (int weight : row)
+            {
+                if (weight != 0)
+                {
+                    edges++;
+                }
+            }
+        }
+        return edges;
+    }
+
+    int Graph::getValue(size_t row, size_t col) const
+    {
+        if (row >= adjacencyMatrix.size() || col >= adjacencyMatrix.size())
+        {
+            throw std::out_of_range("Invalid indices.");
+        }
+        return adjacencyMatrix[row][col];
+    }
+
+   
 }

@@ -12,14 +12,18 @@ namespace ariel
     {
     public:
         int isConnected(Graph &g);
-        int shortestPath(Graph &g, size_t start, size_t end);
+        std ::string shortestPath(Graph g, int s, int e);
+
         int isContainsCycle(Graph &g);
-        int isBipartite(Graph &g);
+
+        std ::string isBipartite(Graph g);
         void negativeCycle(Graph &g);
 
+        bool hasLoopbacks(Graph g);
+
+
     private:
-        bool isCyclicUtil(Graph &g, size_t v, std::vector<bool> &visited, std::vector<bool> &recStack);
-        bool isBipartiteUtil(Graph &g, size_t v, std::vector<int> &color);
+        int minDistance(std::vector<int> distances, std::vector<bool> visited);
     };
 
 }
