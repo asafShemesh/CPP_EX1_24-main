@@ -174,81 +174,82 @@ int Algorithms::isContainsCycle(Graph &g)
         }
     }
 
+    std::cout << "No cycle found." << std::endl;
     return 0; // No cycle found
 }
 
-    std::string Algorithms::isBipartite(Graph g)
+std::string Algorithms::isBipartite(Graph g)
+{
+    if (hasLoopbacks(g))
     {
-        if (hasLoopbacks(g))
-        {
-            return "The graph is not bipartite";
-        }
-        std::vector<int> color(g.getNumVertices(), -1);
-        color[0] = 1;
-
-        std::queue<int> q;
-        q.push(0);
-
-        while (!q.empty())
-        {
-            size_t curr = static_cast<size_t>(q.front());
-            q.pop();
-
-            for (size_t i = 0; i < g.getNumVertices(); i++)
-            {
-                if (g.getValue(curr, i) != 0)
-                {
-                    if (color[i] == -1)
-                    {
-                        color[i] = 1 - color[curr];
-                        q.push(i);
-                    }
-                    else if (g.getValue(curr, i) && color[i] == color[curr])
-                    {
-                        return "0";
-                    }
-                }
-            }
-        }
-
-        std::string ans = "The graph is bipartite: A={";
-        bool first = true;
-        for (size_t i = 0; i < g.getNumVertices(); i++)
-        {
-            if (color[i] == 1)
-            {
-                if (first)
-                {
-                    ans += std::to_string(i);
-                    first = false;
-                }
-                else
-                {
-                    ans += ", " + std::to_string(i);
-                }
-            }
-        }
-        ans += "}, B={";
-        first = true;
-        for (size_t i = 0; i < g.getNumVertices(); i++)
-        {
-            if (color[i] == 0)
-            {
-                if (first)
-                {
-                    ans += std::to_string(i);
-                    first = false;
-                }
-                else
-                {
-                    ans += ", " + std::to_string(i);
-                }
-            }
-        }
-        ans += "}";
-
-        return ans;
+        return "The graph is not bipartite";
     }
+    std::vector<int> color(g.getNumVertices(), -1);
+    color[0] = 1;
+
+    std::queue<int> q;
+    q.push(0);
+
+    while (!q.empty())
+    {
+        size_t curr = static_cast<size_t>(q.front());
+        q.pop();
+
+        for (size_t i = 0; i < g.getNumVertices(); i++)
+        {
+            if (g.getValue(curr, i) != 0)
+            {
+                if (color[i] == -1)
+                {
+                    color[i] = 1 - color[curr];
+                    q.push(i);
+                }
+                else if (g.getValue(curr, i) && color[i] == color[curr])
+                {
+                    return "The graph is not bipartite"; // Fix: Return proper message
+                }
+            }
+        }
+    }
+
+    std::string ans = "The graph is bipartite: A={";
+    bool first = true;
+    for (size_t i = 0; i < g.getNumVertices(); i++)
+    {
+        if (color[i] == 1)
+        {
+            if (first)
+            {
+                ans += std::to_string(i);
+                first = false;
+            }
+            else
+            {
+                ans += ", " + std::to_string(i);
+            }
+        }
+    }
+    ans += "}, B={";
+    first = true;
+    for (size_t i = 0; i < g.getNumVertices(); i++)
+    {
+        if (color[i] == 0)
+        {
+            if (first)
+            {
+                ans += std::to_string(i);
+                first = false;
+            }
+            else
+            {
+                ans += ", " + std::to_string(i);
+            }
+        }
+    }
+    ans += "}";
+
+    return ans;
+}
 
     bool Algorithms::hasLoopbacks(Graph g)
     {
