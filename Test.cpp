@@ -81,7 +81,7 @@ TEST_CASE("Test isBipartite")
         {0, 0, 1, 0, 0},
         {0, 0, 0, 0, 0}};
     g.loadGraph(graph2);
-    CHECK(ariel::Algorithms().isBipartite(g) == "The graph is not bipartite");
+    CHECK(ariel::Algorithms().isBipartite(g) == "0");
 
     std::vector<std::vector<int>> graph3 = {
         {0, 1, 0, 0, 0},

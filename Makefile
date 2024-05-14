@@ -6,9 +6,8 @@ VALGRIND_FLAGS=-v --leak-check=full --show-leak-kinds=all  --error-exitcode=99
 
 SOURCES=Graph.cpp Algorithms.cpp TestCounter.cpp Test.cpp
 OBJECTS=$(subst .cpp,.o,$(SOURCES))
-all: run demo test
-run: demo
-	./$^
+all: demo test
+
 
 demo: Demo.o $(filter-out TestCounter.o Test.o,$(OBJECTS))
 	$(CXX) $(CXXFLAGS) $^ -o demo
