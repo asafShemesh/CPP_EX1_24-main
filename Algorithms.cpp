@@ -1,28 +1,22 @@
 #include "Algorithms.hpp"
 #include <queue>
 #include <iostream>
-#include <limits>
 #include <algorithm>
-#include <stdexcept>
 
 namespace ariel
 {
 
-    int Algorithms::minDistance(std::vector<int> distances, std::vector<bool> visited)
+    bool Algorithms::hasLoopbacks(Graph g)
     {
-        int min = INT32_MAX;
-        int min_index = -1;
-
-        for (size_t i = 0; i < distances.size(); i++)
+        for (size_t i = 0; i < g.getNumVertices(); i++)
         {
-            if (!visited[i] && distances[i] <= min)
+            if (g.getValue(i, i) != 0)
             {
-                min = distances[i];
-                min_index = i;
+                return true;
             }
         }
 
-        return min_index;
+        return false;
     }
 
     int Algorithms::isConnected(Graph &g)
@@ -62,6 +56,9 @@ namespace ariel
         size_t end = static_cast<size_t>(e);
         size_t numVertices = g.getNumVertices();
 
+        // Check for negative cycles
+        negativeCycle(g);
+
         // Initialize distances array and set the distance from start vertex to itself as 0
         std::vector<int> distances(numVertices, INT32_MAX);
         distances[start] = 0;
@@ -85,18 +82,6 @@ namespace ariel
             }
         }
 
-        // Check for negative cycles
-        for (size_t u = 0; u < numVertices; u++)
-        {
-            for (size_t v = 0; v < numVertices; v++)
-            {
-                if (g.getValue(u, v) != 0 && distances[u] != INT32_MAX && distances[u] + g.getValue(u, v) < distances[v])
-                {
-                    return "Negative cycle detected";
-                }
-            }
-        }
-
         // If end vertex is not reachable from start vertex
         if (distances[end] == INT32_MAX)
         {
@@ -114,6 +99,7 @@ namespace ariel
 
         return shortestPath;
     }
+
     bool isCyclicDFS(Graph &g, size_t v, std::vector<bool> &visited, std::vector<int> &parent, std::vector<size_t> &cyclePath)
     {
         visited[v] = true;
@@ -171,11 +157,10 @@ namespace ariel
                 }
                 std::cout << cyclePath[0] << std::endl;
 
-                return 1; // Cycle detected
+                return 1;
             }
         }
 
-        // No cycle found
         return 0;
     }
 
@@ -207,7 +192,7 @@ namespace ariel
                     }
                     else if (g.getValue(curr, i) && color[i] == color[curr])
                     {
-                        return "0"; // Fix: Return proper message
+                        return "0";
                     }
                 }
             }
@@ -252,19 +237,6 @@ namespace ariel
         return ans;
     }
 
-    bool Algorithms::hasLoopbacks(Graph g)
-    {
-        for (size_t i = 0; i < g.getNumVertices(); i++)
-        {
-            if (g.getValue(i, i) != 0)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     void Algorithms::negativeCycle(Graph &g)
     {
         const auto &adjacencyMatrix = g.getAdjacencyMatrix();
@@ -293,4 +265,4 @@ namespace ariel
         std::cout << "No negative cycle detected." << std::endl;
     }
 
-} // namespace ariel
+}

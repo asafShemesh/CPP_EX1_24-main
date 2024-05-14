@@ -12,16 +12,11 @@ namespace ariel
         Graph();
 
         void loadGraph(const std::vector<std::vector<int>> &matrix);
-
         void printGraph() const;
-
         const std::vector<std::vector<int>> &getAdjacencyMatrix() const;
         size_t getNumVertices() const;
         size_t getNumEdges() const;
-
         int getValue(size_t row, size_t col) const;
-
-    private:
         std::vector<std::vector<int>> adjacencyMatrix;
     };
 }
