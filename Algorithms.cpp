@@ -2,6 +2,7 @@
 #include <queue>
 #include <iostream>
 #include <limits>
+#include <algorithm>
 #include <stdexcept>
 
 namespace ariel
@@ -113,143 +114,143 @@ namespace ariel
 
         return shortestPath;
     }
-
-bool isCyclicDFS(Graph &g, size_t v, std::vector<bool> &visited, std::vector<int> &parent, std::vector<size_t> &cyclePath)
-{
-    visited[v] = true;
-
-    const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-    for (size_t i = 0; i < adjacencyMatrix[v].size(); ++i)
+    bool isCyclicDFS(Graph &g, size_t v, std::vector<bool> &visited, std::vector<int> &parent, std::vector<size_t> &cyclePath)
     {
-        if (adjacencyMatrix[v][i])
+        visited[v] = true;
+
+        const auto &adjacencyMatrix = g.getAdjacencyMatrix();
+        for (size_t i = 0; i < adjacencyMatrix[v].size(); ++i)
         {
-            if (!visited[i])
+            if (adjacencyMatrix[v][i])
             {
-                parent[i] = v; // Set the parent of vertex i to v
-                if (isCyclicDFS(g, i, visited, parent, cyclePath))
+                if (!visited[i])
                 {
-                    cyclePath.push_back(v); // Add the current vertex to the cycle path
+                    parent[i] = v; // Set the parent of vertex i to v
+                    if (isCyclicDFS(g, i, visited, parent, cyclePath))
+                    {
+                        return true;
+                    }
+                }
+                else if (i != static_cast<size_t>(parent[v]) && parent[v] != -1)
+                {
+                    // Found a cycle, construct the cycle path
+                    size_t p = v;
+                    while (p != i)
+                    {
+                        cyclePath.push_back(p);
+                        p = static_cast<size_t>(parent[p]);
+                    }
+                    cyclePath.push_back(i);
                     return true;
                 }
             }
-            else if (i != static_cast<size_t>(parent[v]) && parent[v] != -1)
-            {
-                // Found a cycle, construct the cycle path
-                size_t p = v;
-                while (p != i)
-                {
-                    cyclePath.push_back(p);
-                    p = static_cast<size_t>(parent[p]);
-                }
-                cyclePath.push_back(i);
-                cyclePath.push_back(v); // Add the current vertex to the cycle path
-                return true;
-            }
         }
+        return false;
     }
-    return false;
-}
 
-int Algorithms::isContainsCycle(Graph &g)
-{
-    const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-    std::vector<bool> visited(adjacencyMatrix.size(), false);
-    std::vector<int> parent(adjacencyMatrix.size(), -1); // Store the parent information for each vertex
-    std::vector<size_t> cyclePath;
-
-    // Perform DFS traversal from each vertex
-    for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
+    int Algorithms::isContainsCycle(Graph &g)
     {
-        cyclePath.clear(); // Clear the cycle path before each DFS traversal
-        if (!visited[i] && isCyclicDFS(g, i, visited, parent, cyclePath))
+        const auto &adjacencyMatrix = g.getAdjacencyMatrix();
+        std::vector<bool> visited(adjacencyMatrix.size(), false);
+        std::vector<int> parent(adjacencyMatrix.size(), -1); // Store the parent information for each vertex
+        std::vector<size_t> cyclePath;
+
+        // Perform DFS traversal from each vertex
+        for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
         {
-            // Print the cycle path
-            std::cout << "The cycle is: ";
-            for (size_t j = cyclePath.size() - 1; j > 0; --j)
+            cyclePath.clear(); // Clear the cycle path before each DFS traversal
+            if (!visited[i] && isCyclicDFS(g, i, visited, parent, cyclePath))
             {
-                std::cout << cyclePath[j] << "->";
+                // Print the cycle path
+                std::cout << "The cycle is: ";
+                // Reverse the cycle path before printing
+                std::reverse(cyclePath.begin(), cyclePath.end());
+                for (size_t j = 0; j < cyclePath.size(); ++j)
+                {
+                    std::cout << cyclePath[j] << "->";
+                }
+                std::cout << cyclePath[0] << std::endl;
+
+                return 1; // Cycle detected
             }
-            std::cout << cyclePath[0] << std::endl;
-            return 1; // Cycle detected
         }
+
+        // No cycle found
+        return 0;
     }
 
-    std::cout << "No cycle found." << std::endl;
-    return 0; // No cycle found
-}
-
-std::string Algorithms::isBipartite(Graph g)
-{
-    if (hasLoopbacks(g))
+    std::string Algorithms::isBipartite(Graph g)
     {
-        return "The graph is not bipartite";
-    }
-    std::vector<int> color(g.getNumVertices(), -1);
-    color[0] = 1;
+        if (hasLoopbacks(g))
+        {
+            return "The graph is not bipartite";
+        }
+        std::vector<int> color(g.getNumVertices(), -1);
+        color[0] = 1;
 
-    std::queue<int> q;
-    q.push(0);
+        std::queue<int> q;
+        q.push(0);
 
-    while (!q.empty())
-    {
-        size_t curr = static_cast<size_t>(q.front());
-        q.pop();
+        while (!q.empty())
+        {
+            size_t curr = static_cast<size_t>(q.front());
+            q.pop();
 
+            for (size_t i = 0; i < g.getNumVertices(); i++)
+            {
+                if (g.getValue(curr, i) != 0)
+                {
+                    if (color[i] == -1)
+                    {
+                        color[i] = 1 - color[curr];
+                        q.push(i);
+                    }
+                    else if (g.getValue(curr, i) && color[i] == color[curr])
+                    {
+                        return "0"; // Fix: Return proper message
+                    }
+                }
+            }
+        }
+
+        std::string ans = "The graph is bipartite: A={";
+        bool first = true;
         for (size_t i = 0; i < g.getNumVertices(); i++)
         {
-            if (g.getValue(curr, i) != 0)
+            if (color[i] == 1)
             {
-                if (color[i] == -1)
+                if (first)
                 {
-                    color[i] = 1 - color[curr];
-                    q.push(i);
+                    ans += std::to_string(i);
+                    first = false;
                 }
-                else if (g.getValue(curr, i) && color[i] == color[curr])
+                else
                 {
-                    return "The graph is not bipartite"; // Fix: Return proper message
+                    ans += ", " + std::to_string(i);
                 }
             }
         }
-    }
-
-    std::string ans = "The graph is bipartite: A={";
-    bool first = true;
-    for (size_t i = 0; i < g.getNumVertices(); i++)
-    {
-        if (color[i] == 1)
+        ans += "}, B={";
+        first = true;
+        for (size_t i = 0; i < g.getNumVertices(); i++)
         {
-            if (first)
+            if (color[i] == 0)
             {
-                ans += std::to_string(i);
-                first = false;
-            }
-            else
-            {
-                ans += ", " + std::to_string(i);
+                if (first)
+                {
+                    ans += std::to_string(i);
+                    first = false;
+                }
+                else
+                {
+                    ans += ", " + std::to_string(i);
+                }
             }
         }
-    }
-    ans += "}, B={";
-    first = true;
-    for (size_t i = 0; i < g.getNumVertices(); i++)
-    {
-        if (color[i] == 0)
-        {
-            if (first)
-            {
-                ans += std::to_string(i);
-                first = false;
-            }
-            else
-            {
-                ans += ", " + std::to_string(i);
-            }
-        }
-    }
-    ans += "}";
+        ans += "}";
 
-    return ans;
-}
+        return ans;
+    }
 
     bool Algorithms::hasLoopbacks(Graph g)
     {

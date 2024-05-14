@@ -21,7 +21,6 @@ namespace ariel
 
         bool hasLoopbacks(Graph g);
 
-
     private:
         int minDistance(std::vector<int> distances, std::vector<bool> visited);
     };

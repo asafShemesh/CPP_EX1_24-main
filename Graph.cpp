@@ -1,5 +1,3 @@
-// Graph.cpp
-
 #include "Graph.hpp"
 #include <iostream>
 
@@ -32,7 +30,7 @@ namespace ariel
     {
         return adjacencyMatrix;
     }
-    
+
     size_t Graph::getNumVertices() const
     {
         return adjacencyMatrix.size();
@@ -63,5 +61,4 @@ namespace ariel
         return adjacencyMatrix[row][col];
     }
 
-   
 }
