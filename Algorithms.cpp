@@ -1,3 +1,4 @@
+// 325362457   asaf0604@gmail.com
 #include "Algorithms.hpp"
 #include <queue>
 #include <iostream>
@@ -56,17 +57,13 @@ namespace ariel
         size_t end = static_cast<size_t>(e);
         size_t numVertices = g.getNumVertices();
 
-        // Check for negative cycles
         negativeCycle(g);
 
-        // Initialize distances array and set the distance from start vertex to itself as 0
         std::vector<int> distances(numVertices, INT32_MAX);
         distances[start] = 0;
 
-        // Initialize vector to store the shortest path
         std::vector<size_t> path(numVertices, SIZE_MAX);
 
-        // Relax edges repeatedly
         for (size_t i = 0; i < numVertices - 1; i++)
         {
             for (size_t u = 0; u < numVertices; u++)
@@ -76,19 +73,17 @@ namespace ariel
                     if (g.getValue(u, v) != 0 && distances[u] != INT32_MAX && distances[u] + g.getValue(u, v) < distances[v])
                     {
                         distances[v] = distances[u] + g.getValue(u, v);
-                        path[v] = u; // Update the parent vertex for constructing the path
+                        path[v] = u;
                     }
                 }
             }
         }
 
-        // If end vertex is not reachable from start vertex
         if (distances[end] == INT32_MAX)
         {
             return "-1";
         }
 
-        // Reconstruct the shortest path
         std::string shortestPath = std::to_string(end);
         size_t current = end;
         while (path[current] != SIZE_MAX)
@@ -111,7 +106,7 @@ namespace ariel
             {
                 if (!visited[i])
                 {
-                    parent[i] = v; // Set the parent of vertex i to v
+                    parent[i] = v;
                     if (isCyclicDFS(g, i, visited, parent, cyclePath))
                     {
                         return true;
@@ -119,7 +114,6 @@ namespace ariel
                 }
                 else if (i != static_cast<size_t>(parent[v]) && parent[v] != -1)
                 {
-                    // Found a cycle, construct the cycle path
                     size_t p = v;
                     while (p != i)
                     {
@@ -138,7 +132,7 @@ namespace ariel
     {
         const auto &adjacencyMatrix = g.getAdjacencyMatrix();
         std::vector<bool> visited(adjacencyMatrix.size(), false);
-        std::vector<int> parent(adjacencyMatrix.size(), -1); // Store the parent information for each vertex
+        std::vector<int> parent(adjacencyMatrix.size(), -1);
         std::vector<size_t> cyclePath;
 
         // Perform DFS traversal from each vertex
@@ -149,7 +143,6 @@ namespace ariel
             {
                 // Print the cycle path
                 std::cout << "The cycle is: ";
-                // Reverse the cycle path before printing
                 std::reverse(cyclePath.begin(), cyclePath.end());
                 for (size_t j = 0; j < cyclePath.size(); ++j)
                 {
@@ -261,8 +254,6 @@ namespace ariel
                 }
             }
         }
-
-        std::cout << "No negative cycle detected." << std::endl;
     }
 
 }
