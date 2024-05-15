@@ -13,6 +13,7 @@ namespace ariel
         int isContainsCycle(Graph &g);
         std ::string isBipartite(Graph g);
         void negativeCycle(Graph &g);
+    private:
         bool hasLoopbacks(Graph g);
     };
 
